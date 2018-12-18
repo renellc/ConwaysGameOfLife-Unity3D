@@ -363,10 +363,10 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1280, y: 720}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -427,6 +427,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -442,6 +443,23 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
+--- !u!114 &519420030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9f1ed80129006b4c8490f6a02d17721, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  viewCamera: {fileID: 519420031}
+  minimumZoomLevel: 4
+  maximumZoomLevel: 15
+  panSpeed: 5
+  board: {fileID: 2061889779}
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -468,7 +486,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 6.5
+  orthographic size: 5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1653,7 +1671,7 @@ GameObject:
   - component: {fileID: 2061889779}
   - component: {fileID: 2061889782}
   m_Layer: 0
-  m_Name: Tilemap
+  m_Name: Board
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1687,9 +1705,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aliveTile: {fileID: 11400000, guid: 25f29ad64214d3e4f8f161833d499785, type: 2}
   deadTile: {fileID: 11400000, guid: af2c18528ecc8e0428baffad007f630a, type: 2}
-  width: 40
-  height: 40
+  width: 48
+  height: 27
   simulationSpeed: 1
+  tilemap: {fileID: 0}
   isRunning: 0
 --- !u!483693784 &2061889780
 TilemapRenderer:

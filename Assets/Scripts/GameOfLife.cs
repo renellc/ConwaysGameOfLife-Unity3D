@@ -30,7 +30,7 @@ public class GameOfLife : MonoBehaviour
     /// <summary>
     /// The tilemap that contains the cells of our grid.
     /// </summary>
-    private Tilemap tilemap;
+    public Tilemap tilemap;
 
     /// <summary>
     /// Contains the states of each cell in the grid. If a cell (x, y) is true, the cell is
@@ -63,6 +63,8 @@ public class GameOfLife : MonoBehaviour
                 tilemap.SetTile(new Vector3Int(x, y, 0), deadTile);
             }
         }
+
+        tilemap.ResizeBounds();
     }
 
     public void StartGameOfLifeSimulation()
