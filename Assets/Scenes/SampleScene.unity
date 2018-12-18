@@ -164,7 +164,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 6.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -250,6 +250,7 @@ GameObject:
   - component: {fileID: 2061889781}
   - component: {fileID: 2061889780}
   - component: {fileID: 2061889779}
+  - component: {fileID: 2061889782}
   m_Layer: 0
   m_Name: Tilemap
   m_TagString: Untagged
@@ -265,7 +266,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2061889777}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -15.15, y: -5.22, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 940711955}
@@ -285,6 +286,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aliveTile: {fileID: 11400000, guid: 25f29ad64214d3e4f8f161833d499785, type: 2}
   deadTile: {fileID: 11400000, guid: af2c18528ecc8e0428baffad007f630a, type: 2}
+  width: 29
+  height: 12
   simulationSpeed: 0.4
 --- !u!483693784 &2061889780
 TilemapRenderer:
@@ -368,3 +371,16 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &2061889782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061889777}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e27ae0264513cf747b47372d0feb4256, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tilemap: {fileID: 2061889781}

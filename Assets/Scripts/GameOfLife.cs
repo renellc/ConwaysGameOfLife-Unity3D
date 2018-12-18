@@ -10,14 +10,12 @@ public class GameOfLife : MonoBehaviour
     /// <summary>
     /// The tile used for when a cell is alive.
     /// </summary>
-    [SerializeField]
-    private Tile aliveTile;
+    public Tile aliveTile;
 
     /// <summary>
     /// The tile used for when a cell is dead.
     /// </summary>
-    [SerializeField]
-    private Tile deadTile;
+    public Tile deadTile;
 
     #endregion
 
@@ -38,7 +36,8 @@ public class GameOfLife : MonoBehaviour
     /// Contains the states of each cell in the grid. If a cell (x, y) is true, the cell is
     /// considered to be alive, otherwise it is dead.
     /// </summary>
-    private Cell[,] gridState;
+    [HideInInspector]
+    public Cell[,] gridState;
 
     /// <summary>
     /// Is the simulation currently running?
