@@ -1,24 +1,40 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Camera))]
 public class CameraControl : MonoBehaviour
 {
-    [SerializeField]
+    /// <summary>
+    /// The main camera for the game.
+    /// </summary>
     private Camera viewCamera;
 
+    /// <summary>
+    /// The zoom level that indicates the closest we can zoom in.
+    /// </summary>
     [SerializeField]
     private int minimumZoomLevel;
 
+    /// <summary>
+    /// The zoom level that indicates the farthest we can zoom out.
+    /// </summary>
     [SerializeField]
     private int maximumZoomLevel;
 
+    /// <summary>
+    /// How fast the camera moves when being panned.
+    /// </summary>
     [SerializeField]
     private float panSpeed;
 
+    /// <summary>
+    /// The reference to the board.
+    /// </summary>
     [SerializeField]
     private GameOfLife board;
 
     private void Start()
     {
+        viewCamera = Camera.main;
         var tilemapCenter = board.tilemap.cellBounds.center;
         tilemapCenter.z = viewCamera.transform.position.z;
         viewCamera.transform.position = tilemapCenter;
@@ -31,17 +47,26 @@ public class CameraControl : MonoBehaviour
     }
 
     /// <summary>
-    /// Moves the camera in soem direction (based on user input).
+    /// Moves the camera in some direction (based on user input).
     /// </summary>
     private void MoveCamera()
     {
-        var input = new Vector3
+        // Get the user's input.
+        var moveDirection = new Vector3
         {
             x = Input.GetAxisRaw("Horizontal"),
             y = Input.GetAxisRaw("Vertical")
-        }.normalized;
+        };
 
-        var targetPos = viewCamera.transform.position + input * panSpeed * Time.deltaTime;
+        // We normalize the user input to get the true direction (where the magnitude of the vector
+        // is equal to 1).
+        moveDirection.Normalize();
+
+        // Scale the move direction by the pan speed.
+        moveDirection *= panSpeed * Time.deltaTime;
+
+        // Update the camera's position.
+        var targetPos = viewCamera.transform.position + moveDirection;
         viewCamera.transform.position = targetPos;
     }
 

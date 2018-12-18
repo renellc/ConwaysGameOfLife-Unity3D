@@ -15,38 +15,50 @@ public class MouseControl : MonoBehaviour
     /// </summary>
     private GameOfLife game;
 
+    /// <summary>
+    /// Is the user allowed to edit the board? 
+    /// </summary>
+    private bool allowedToEdit;
+
     private void Start()
     {
         game = GetComponent<GameOfLife>();
+        allowedToEdit = true;
     }
 
     private void Update()
     {
-        // Sets a tile as alive on the grid.
-        if (!game.isRunning && Input.GetMouseButton(0))
+        if (!allowedToEdit)
         {
-            var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0;
-            var currentCellPos = tilemap.WorldToCell(mousePos);
-
-            if (!game.gridState[currentCellPos.x, currentCellPos.y].Alive)
-            {
-                game.gridState[currentCellPos.x, currentCellPos.y].Alive = true;
-                tilemap.SetTile(currentCellPos, game.aliveTile);
-            }
+            return;
         }
 
-        if (!game.isRunning && Input.GetMouseButton(1))
-        {
-            var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0;
-            var currentCellPos = tilemap.WorldToCell(mousePos);
+        var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0;
+        var cell = tilemap.WorldToCell(mousePos);
 
-            if (game.gridState[currentCellPos.x, currentCellPos.y].Alive)
-            {
-                game.gridState[currentCellPos.x, currentCellPos.y].Alive = false;
-                tilemap.SetTile(currentCellPos, game.deadTile);
-            }
+        // Sets a tile as alive on the board.
+        if (!game.isRunning && Input.GetMouseButton(0) && !game.gridState[cell.x, cell.y].Alive)
+        {
+            game.gridState[cell.x, cell.y].Alive = true;
+            tilemap.SetTile(cell, game.aliveTile);
         }
+
+        // Sets a tile as dead on the board.
+        if (!game.isRunning && Input.GetMouseButton(1) && game.gridState[cell.x, cell.y].Alive)
+        {
+            game.gridState[cell.x, cell.y].Alive = false;
+            tilemap.SetTile(cell, game.deadTile);
+        }
+    }
+
+    public void OnUIMouseHoverEnter()
+    {
+        allowedToEdit = false;
+    }
+
+    public void OnUIMouseHoverExit()
+    {
+        allowedToEdit = true;
     }
 }

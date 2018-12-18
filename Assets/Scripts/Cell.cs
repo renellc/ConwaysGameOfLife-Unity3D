@@ -32,8 +32,9 @@ public class Cell
     /// <returns>The number of living cells that are neighbors to this cell.</returns>
     public int LivingCellCount(Cell[,] grid)
     {
-        int livingNeighborCount = LivingCellSides(grid) + LivingCellAdjacentLeft(grid) + LivingCellAdjacentRight(grid);
-        return livingNeighborCount;
+        int livingAdj = LivingCellAdjacentLeft(grid) + LivingCellAdjacentRight(grid);
+        int livingTotal = LivingCellSides(grid) + livingAdj;
+        return livingTotal;
     }
 
     /// <summary>
@@ -45,7 +46,7 @@ public class Cell
     {
         int sideCount = 0;
 
-        // Check right side. If we reach the width of the grid, check opposite side of the grid.
+        // Check right side. If we reach the width of the grid, wrap around and check opposite side of the grid.
         if (X + 1 <= grid.GetLength(0))
         {
             sideCount = grid[X, Y].Alive ? sideCount + 1 : sideCount;
@@ -55,7 +56,7 @@ public class Cell
             sideCount++;
         }
 
-        // Check left side. If x is less than 0, check opposite side of the grid.
+        // Check left side. If x is less than 0, wrap around and check opposite side of the grid.
         if (X - 1 >= 0)
         {
             sideCount = grid[X - 1, Y].Alive ? sideCount + 1 : sideCount;
@@ -65,7 +66,7 @@ public class Cell
             sideCount++;
         }
 
-        // Check top side. If we reach height of the grid, check bottom of the grid.
+        // Check top side. If we reach height of the grid, wrap around and check bottom of the grid.
         if (Y + 1 <= grid.GetLength(1))
         {
             sideCount = grid[X, Y + 1].Alive ? sideCount + 1 : sideCount;
@@ -75,7 +76,7 @@ public class Cell
             sideCount++;
         }
 
-        // Check bottom side. If y is less than 0, check top of the grid.
+        // Check bottom side. If y is less than 0, wrap around and check top of the grid.
         if (Y - 1 >= 0 && grid[X, Y - 1].Alive)
         {
             sideCount = grid[X, Y - 1].Alive ? sideCount + 1 : sideCount;
