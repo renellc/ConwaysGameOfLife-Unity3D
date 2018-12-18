@@ -21,6 +21,8 @@ public class GameOfLife : MonoBehaviour
 
     #endregion
 
+    public int width, height;
+
     /// <summary>
     /// The speed at which the simulation will run at.
     /// </summary>
@@ -46,15 +48,17 @@ public class GameOfLife : MonoBehaviour
     private void Start()
     {
         tilemap = GetComponent<Tilemap>();
-        gridState = new Cell[tilemap.size.x, tilemap.size.y];
+        
         isRunning = false;
+        gridState = new Cell[width, height];
 
         // All cells start off dead
-        for (int x = 0; x < tilemap.size.x; x++)
+        for (int x = 0; x < width; x++)
         {
-            for (int y = 0; y < tilemap.size.y; y++)
+            for (int y = 0; y < height; y++)
             {
                 gridState[x, y] = new Cell(x, y, false);
+                tilemap.SetTile(new Vector3Int(x, y, 0), deadTile);
             }
         }
     }
