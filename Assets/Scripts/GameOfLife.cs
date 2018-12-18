@@ -42,7 +42,10 @@ public class GameOfLife : MonoBehaviour
     /// <summary>
     /// Is the simulation currently running?
     /// </summary>
-    private bool isRunning;
+    [HideInInspector]
+    public bool isRunning;
+
+    private bool startedSimulation;
 
     private void Start()
     {
@@ -64,13 +67,18 @@ public class GameOfLife : MonoBehaviour
 
     public void StartGameOfLifeSimulation()
     {
-        isRunning = true;
-        StartCoroutine(StartSimulation());
+        if (!startedSimulation)
+        {
+            isRunning = true;
+            startedSimulation = true;
+            StartCoroutine(StartSimulation());
+        }
     }
 
     public void StopSimulation()
     {
         isRunning = false;
+        startedSimulation = false;
     }
 
     private IEnumerator StartSimulation()

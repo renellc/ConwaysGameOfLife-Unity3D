@@ -23,7 +23,7 @@ public class MouseControl : MonoBehaviour
     private void Update()
     {
         // Sets a tile as alive on the grid.
-        if (Input.GetMouseButton(0))
+        if (!game.isRunning && Input.GetMouseButton(0))
         {
             var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
@@ -36,7 +36,7 @@ public class MouseControl : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButton(1))
+        if (!game.isRunning && Input.GetMouseButton(1))
         {
             var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0;
