@@ -18,7 +18,8 @@ public class MouseControl : MonoBehaviour
     /// <summary>
     /// Is the user allowed to edit the board? 
     /// </summary>
-    private bool allowedToEdit;
+    [HideInInspector]
+    public bool allowedToEdit;
 
     private void Start()
     {

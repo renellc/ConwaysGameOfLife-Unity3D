@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(Tilemap))]
+[RequireComponent(typeof(Tilemap), typeof(MouseControl))]
 public class GameOfLife : MonoBehaviour
 {
     #region Tiles
@@ -21,10 +22,15 @@ public class GameOfLife : MonoBehaviour
 
     public int width, height;
 
-    /// <summary>
-    /// The speed at which the simulation will run at.
-    /// </summary>
     [SerializeField]
+    private Slider simSpeedSlider;
+
+    /// <summary>
+    /// The dfeault speed at which the simulation will run at.
+    /// </summary>
+    [SerializeField, Range(0, 0.9f)]
+    private float defaultSimulationSpeed;
+
     private float simulationSpeed;
 
     /// <summary>
@@ -45,11 +51,15 @@ public class GameOfLife : MonoBehaviour
     [HideInInspector]
     public bool isRunning;
 
-    private bool startedSimulation;
+    private MouseControl mouseControl;
 
     private void Start()
     {
         tilemap = GetComponent<Tilemap>();
+        mouseControl = GetComponent<MouseControl>();
+
+        simulationSpeed = defaultSimulationSpeed;
+        simSpeedSlider.value = 1 - simulationSpeed;
         
         isRunning = false;
         gridState = new Cell[width, height];
@@ -69,10 +79,10 @@ public class GameOfLife : MonoBehaviour
 
     public void StartGameOfLifeSimulation()
     {
-        if (!startedSimulation)
+        if (!isRunning)
         {
             isRunning = true;
-            startedSimulation = true;
+            mouseControl.allowedToEdit = false;
             StartCoroutine(StartSimulation());
         }
     }
@@ -80,7 +90,7 @@ public class GameOfLife : MonoBehaviour
     public void StopSimulation()
     {
         isRunning = false;
-        startedSimulation = false;
+        mouseControl.allowedToEdit = true;
     }
 
     private IEnumerator StartSimulation()
@@ -112,5 +122,10 @@ public class GameOfLife : MonoBehaviour
         }
 
         return newCellState;
+    }
+
+    public void AdjustSimulationSpeed()
+    {
+        simulationSpeed = 1 - simSpeedSlider.value;
     }
 }
