@@ -8,6 +8,7 @@ public class GameOfLife : MonoBehaviour
 {
     #region Tiles
 
+    [Header("Board Tiles")]
     /// <summary>
     /// The tile used for when a cell is alive.
     /// </summary>
@@ -20,23 +21,57 @@ public class GameOfLife : MonoBehaviour
 
     #endregion
 
-    public int width, height;
+    #region Board settings
 
+    [Header("Board Settings")]
+    /// <summary>
+    /// The width of the board.
+    /// </summary>
     [SerializeField]
-    private Slider simSpeedSlider;
+    private int width = 48;
 
     /// <summary>
-    /// The dfeault speed at which the simulation will run at.
+    /// The height of the board.
+    /// </summary>
+    [SerializeField]
+    private int height = 27;
+
+    /// <summary>
+    /// The default speed at which the simulation will run at.
     /// </summary>
     [SerializeField, Range(0, 0.9f)]
-    private float defaultSimulationSpeed;
+    private float defaultSimulationSpeed = 0;
 
-    private float simulationSpeed;
+    #endregion
 
+    #region Components
+
+    [Header("Components")]
     /// <summary>
     /// The tilemap that contains the cells of our grid.
     /// </summary>
+    [HideInInspector]
     public Tilemap tilemap;
+
+    /// <summary>
+    /// The component for the controlling the mouse.
+    /// </summary>
+    private MouseControl mouseControl;
+
+    /// <summary>
+    /// The UI slider component for adjusting the simulation speed.
+    /// </summary>
+    [SerializeField]
+    private Slider simSpeedSlider;
+
+    #endregion
+
+    #region Class members
+
+    /// <summary>
+    /// The current simulation speed.
+    /// </summary>
+    private float simulationSpeed;
 
     /// <summary>
     /// Contains the states of each cell in the grid. If a cell (x, y) is true, the cell is
@@ -51,7 +86,7 @@ public class GameOfLife : MonoBehaviour
     [HideInInspector]
     public bool isRunning;
 
-    private MouseControl mouseControl;
+    #endregion
 
     private void Start()
     {
