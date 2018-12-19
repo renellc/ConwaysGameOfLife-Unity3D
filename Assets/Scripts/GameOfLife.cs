@@ -145,7 +145,7 @@ public class GameOfLife : MonoBehaviour
     private Cell UpdateCellState(Cell cell)
     {
         Cell newCellState = cell;
-        int livingCellCount = cell.LivingCellCount(gridState);
+        int livingCellCount = cell.LivingNeighborCount(gridState);
 
         if (cell.Alive)
         {

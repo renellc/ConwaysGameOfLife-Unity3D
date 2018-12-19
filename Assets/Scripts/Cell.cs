@@ -18,6 +18,12 @@ public class Cell
     /// </summary>
     public bool Alive { get; set; }
 
+    /// <summary>
+    /// Creates a new Cell object.
+    /// </summary>
+    /// <param name="x">The X coordinate of the cell in the grid its in.</param>
+    /// <param name="y">The Y coordinate of the cell in the grid its in.</param>
+    /// <param name="alive">The living state of the cell. True to alive, false to dead.</param>
     public Cell(int x, int y, bool alive)
     {
         X = x;
@@ -30,10 +36,9 @@ public class Cell
     /// </summary>
     /// <param name="grid">The current state of the grid.</param>
     /// <returns>The number of living cells that are neighbors to this cell.</returns>
-    public int LivingCellCount(Cell[,] grid)
+    public int LivingNeighborCount(Cell[,] grid)
     {
-        int livingAdj = LivingCellAdjacentLeft(grid) + LivingCellAdjacentRight(grid);
-        int livingTotal = LivingCellSides(grid) + livingAdj;
+        int livingTotal = LivingCellSides(grid) + LivingCellAdjacent(grid);
         return livingTotal;
     }
 
@@ -46,42 +51,26 @@ public class Cell
     {
         int sideCount = 0;
 
-        // Check right side. If we reach the width of the grid, wrap around and check opposite side of the grid.
-        if (X + 1 <= grid.GetLength(0))
-        {
-            sideCount = grid[X, Y].Alive ? sideCount + 1 : sideCount;
-        }
-        else if (grid[0, Y].Alive)
+        // Cell to the right
+        if (IsValidCoordinate(grid, X + 1, Y) && grid[X + 1, Y].Alive)
         {
             sideCount++;
         }
 
-        // Check left side. If x is less than 0, wrap around and check opposite side of the grid.
-        if (X - 1 >= 0)
-        {
-            sideCount = grid[X - 1, Y].Alive ? sideCount + 1 : sideCount;
-        }
-        else if (grid[grid.GetLength(0) - 1, Y].Alive)
+        // Cell to the left
+        if (IsValidCoordinate(grid, X - 1, Y) && grid[X - 1, Y].Alive)
         {
             sideCount++;
         }
 
-        // Check top side. If we reach height of the grid, wrap around and check bottom of the grid.
-        if (Y + 1 <= grid.GetLength(1))
-        {
-            sideCount = grid[X, Y + 1].Alive ? sideCount + 1 : sideCount;
-        }
-        else if (grid[X, 0].Alive)
+        // Cell to the top
+        if (IsValidCoordinate(grid, X, Y + 1) && grid[X, Y + 1].Alive)
         {
             sideCount++;
         }
 
-        // Check bottom side. If y is less than 0, wrap around and check top of the grid.
-        if (Y - 1 >= 0 && grid[X, Y - 1].Alive)
-        {
-            sideCount = grid[X, Y - 1].Alive ? sideCount + 1 : sideCount;
-        }
-        else if (grid[X, grid.GetLength(1) - 1].Alive)
+        // Cell to the bottom
+        if (IsValidCoordinate(grid, X, Y - 1) && grid[X, Y - 1].Alive)
         {
             sideCount++;
         }
@@ -90,118 +79,52 @@ public class Cell
     }
 
     /// <summary>
-    /// Gets the number of living cells left adjacent (top left and bottom left) to this cell.
+    /// Gets the number of living cells adjacent to this cell.
     /// </summary>
     /// <param name="grid">The current state of the grid.</param>
-    /// <returns>The number of living cells left adjacent (top left and bottom left) to this cell.</returns>
-    private int LivingCellAdjacentLeft(Cell[,] grid)
+    /// <returns>The number of living cells adjacent to this cell.</returns>
+    private int LivingCellAdjacent(Cell[,] grid)
     {
-        int adjLeftCount = 0;
+        int adjCount = 0;
 
-        if (X - 1 >= 0)
+        // Cell to the top right
+        if (IsValidCoordinate(grid, X + 1, Y + 1) && grid[X + 1, Y + 1].Alive)
         {
-            // Case where the x coordinate before of this one is still a valid grid position.
-
-            if (Y + 1 <= grid.GetLength(1))
-            {
-                adjLeftCount = grid[X - 1, Y + 1].Alive ? adjLeftCount + 1 : adjLeftCount;
-            }
-            else if (grid[X - 1, 0].Alive)
-            {
-                adjLeftCount++;
-            }
-
-            if (Y - 1 >= 0)
-            {
-                adjLeftCount = grid[X - 1, Y - 1].Alive ? adjLeftCount + 1 : adjLeftCount;
-            }
-            else if (grid[X - 1, grid.GetLength(1) - 1].Alive)
-            {
-                adjLeftCount++;
-            }
-        }
-        else
-        {
-            // Case where the x coordinate before of this one aren't valid grid positions, thus we
-            // wrap around and we use the width of the grid as the x coordinate.
-
-            if (Y + 1 <= grid.GetLength(1))
-            {
-                adjLeftCount = grid[grid.GetLength(0) - 1, Y + 1].Alive ? adjLeftCount + 1 : adjLeftCount;
-            }
-            else if (grid[grid.GetLength(0) - 1, 0].Alive)
-            {
-                adjLeftCount++;
-            }
-
-            if (Y - 1 >= 0)
-            {
-                adjLeftCount = grid[grid.GetLength(0) - 1, Y - 1].Alive ? adjLeftCount + 1 : adjLeftCount;
-            }
-            else if (grid[grid.GetLength(0) - 1, grid.GetLength(1) - 1].Alive)
-            {
-                adjLeftCount++;
-            }
+            adjCount++;
         }
 
-        return adjLeftCount;
+        // Cell to the bottom right
+        if (IsValidCoordinate(grid, X + 1, Y - 1) && grid[X + 1, Y - 1].Alive)
+        {
+            adjCount++;
+        }
+
+        // Cell to the top left
+        if (IsValidCoordinate(grid, X - 1, Y + 1) && grid[X + 1, Y + 1].Alive)
+        {
+            adjCount++;
+        }
+
+        // Cell to the bottom left
+        if (IsValidCoordinate(grid, X - 1, Y - 1) && grid[X + 1, Y + 1].Alive)
+        {
+            adjCount++;
+        }
+
+        return adjCount;
     }
 
     /// <summary>
-    /// Gets the number of living cells adjacent right (top right and bottom right) to this cell.
+    /// Checks if a given (x, y) coordinate is a valid grid coordinate or not.
     /// </summary>
     /// <param name="grid">The current state of the grid.</param>
-    /// <returns>The number of living cells adjacent right (top right and bottom right) to this cell.</returns>
-    private int LivingCellAdjacentRight(Cell[,] grid)
+    /// <param name="x">The x coordinate to check.</param>
+    /// <param name="y">The y coordinate to check.</param>
+    /// <returns>True if the (x, y) coordinate is valid in the grid or not.</returns>
+    private bool IsValidCoordinate(Cell[,] grid, int x, int y)
     {
-        int adjRightCount = 0;
-
-        if (X + 1 <= grid.GetLength(0))
-        {
-            // Case where the x coordinate ahead of this one is still a valid grid position.
-
-            if (Y + 1 <= grid.GetLength(1))
-            {
-                adjRightCount = grid[X + 1, Y + 1].Alive ? adjRightCount + 1 : adjRightCount;
-            }
-            else if (grid[X + 1, 0].Alive)
-            {
-                adjRightCount++;
-            }
-
-            if (Y - 1 >= 0)
-            {
-                adjRightCount = grid[X + 1, Y - 1].Alive ? adjRightCount + 1 : adjRightCount;
-            }
-            else if (grid[X + 1, grid.GetLength(1) - 1].Alive)
-            {
-                adjRightCount++;
-            }
-        }
-        else
-        {
-            // Case where the x coordinate ahead of this one aren't valid grid positions, thus we
-            // wrap around and we use the 0 x coordinate.
-
-            if (Y + 1 <= grid.GetLength(1))
-            {
-                adjRightCount = grid[0, Y + 1].Alive ? adjRightCount + 1 : adjRightCount;
-            }
-            else if (grid[0, 0].Alive)
-            {
-                adjRightCount++;
-            }
-
-            if (Y - 1 >= 0)
-            {
-                adjRightCount = grid[0, Y - 1].Alive ? adjRightCount + 1 : adjRightCount;
-            }
-            else if (grid[0, grid.GetLength(1) - 1].Alive)
-            {
-                adjRightCount++;
-            }
-        }
-
-        return adjRightCount;
+        int gridWidth = grid.GetLength(0);
+        int gridHeight = grid.GetLength(1);
+        return x >= 0 && x < gridWidth && y >= 0 && y < gridHeight;
     }
 }
