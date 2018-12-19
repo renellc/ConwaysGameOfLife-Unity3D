@@ -38,80 +38,30 @@ public class Cell
     /// <returns>The number of living cells that are neighbors to this cell.</returns>
     public int LivingNeighborCount(Cell[,] grid)
     {
-        int livingTotal = LivingCellSides(grid) + LivingCellAdjacent(grid);
-        return livingTotal;
-    }
+        int livingCount = 0;
 
-    /// <summary>
-    /// Gets the number of living cells on the sides of the cell.
-    /// </summary>
-    /// <param name="grid">The current state of the grid.</param>
-    /// <returns>The number of living cells on the sides of the cell.</returns>
-    private int LivingCellSides(Cell[,] grid)
-    {
-        int sideCount = 0;
-
-        // Cell to the right
-        if (IsValidCoordinate(grid, X + 1, Y) && grid[X + 1, Y].Alive)
+        // Checks the cells surrounding this cell. Any cell with X coordinate X - 1 is to the left
+        // of the cell, X is the top or bottom of the cell, and X + 1 is to the right of the cell.
+        // Similarly, any cell with Y coordinate Y - 1 is below the cell, Y is the same level as
+        // this cell, and Y + 1 is above the cell. Thus, (X - 1, Y - 1) is the bottom left cell,
+        // (X + 1, Y + 1) is the top right cell, etc.
+        for (int x = X - 1; x < X + 2; x++)
         {
-            sideCount++;
+            for (int y = Y - 1; y < Y + 2; y++)
+            {
+                if (x == X && y == Y)
+                {
+                    continue;
+                }
+
+                if (IsValidCoordinate(grid, x, y) && grid[x, y].Alive)
+                {
+                    livingCount++;
+                }
+            }
         }
 
-        // Cell to the left
-        if (IsValidCoordinate(grid, X - 1, Y) && grid[X - 1, Y].Alive)
-        {
-            sideCount++;
-        }
-
-        // Cell to the top
-        if (IsValidCoordinate(grid, X, Y + 1) && grid[X, Y + 1].Alive)
-        {
-            sideCount++;
-        }
-
-        // Cell to the bottom
-        if (IsValidCoordinate(grid, X, Y - 1) && grid[X, Y - 1].Alive)
-        {
-            sideCount++;
-        }
-
-        return sideCount;
-    }
-
-    /// <summary>
-    /// Gets the number of living cells adjacent to this cell.
-    /// </summary>
-    /// <param name="grid">The current state of the grid.</param>
-    /// <returns>The number of living cells adjacent to this cell.</returns>
-    private int LivingCellAdjacent(Cell[,] grid)
-    {
-        int adjCount = 0;
-
-        // Cell to the top right
-        if (IsValidCoordinate(grid, X + 1, Y + 1) && grid[X + 1, Y + 1].Alive)
-        {
-            adjCount++;
-        }
-
-        // Cell to the bottom right
-        if (IsValidCoordinate(grid, X + 1, Y - 1) && grid[X + 1, Y - 1].Alive)
-        {
-            adjCount++;
-        }
-
-        // Cell to the top left
-        if (IsValidCoordinate(grid, X - 1, Y + 1) && grid[X + 1, Y + 1].Alive)
-        {
-            adjCount++;
-        }
-
-        // Cell to the bottom left
-        if (IsValidCoordinate(grid, X - 1, Y - 1) && grid[X + 1, Y + 1].Alive)
-        {
-            adjCount++;
-        }
-
-        return adjCount;
+        return livingCount;
     }
 
     /// <summary>

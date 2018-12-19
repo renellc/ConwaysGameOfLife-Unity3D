@@ -133,6 +133,17 @@ public class GameOfLife : MonoBehaviour
         while (isRunning)
         {
             Debug.Log("running sim");
+            for (int x = 0; x < gridState.GetLength(0); x++)
+            {
+                for (int y = 0; y < gridState.GetLength(1); y++)
+                {
+                    var livingNeighborCount = gridState[x, y].LivingNeighborCount(gridState);
+                    if (livingNeighborCount > 0)
+                    {
+                        Debug.Log("Cell " + x + ", " + y + " has a living neighbor count of " + livingNeighborCount);
+                    }
+                }
+            }
             yield return new WaitForSeconds(simulationSpeed);
         }
     }
