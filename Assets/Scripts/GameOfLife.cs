@@ -112,6 +112,9 @@ public class GameOfLife : MonoBehaviour
         tilemap.ResizeBounds();
     }
 
+    /// <summary>
+    /// Starts the game of life simulation.
+    /// </summary>
     public void StartGameOfLifeSimulation()
     {
         if (!isRunning)
@@ -122,28 +125,54 @@ public class GameOfLife : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Stops the Game of Life simulation.
+    /// </summary>
     public void StopSimulation()
     {
         isRunning = false;
         mouseControl.allowedToEdit = true;
     }
 
+    /// <summary>
+    /// Starts the Game Of Life simulation.
+    /// </summary>
     private IEnumerator StartSimulation()
     {
         while (isRunning)
         {
-            Debug.Log("running sim");
+            // Create a new grid state.
+            Cell[,] nextGridState = new Cell[width, height];
+
+            // Update each cell's state and place them in a new grid state.
             for (int x = 0; x < gridState.GetLength(0); x++)
             {
                 for (int y = 0; y < gridState.GetLength(1); y++)
                 {
-                    var livingNeighborCount = gridState[x, y].LivingNeighborCount(gridState);
-                    if (livingNeighborCount > 0)
+                    nextGridState[x, y] = UpdateCellState(gridState, gridState[x, y]);
+                }
+            }
+
+            // Update our current grid state.
+            gridState = nextGridState;
+
+            // Render the new grid state.
+            for (int x = 0; x < gridState.GetLength(0); x++)
+            {
+                for (int y = 0; y < gridState.GetLength(1); y++)
+                {
+                    if (gridState[x, y].Alive)
                     {
-                        Debug.Log("Cell " + x + ", " + y + " has a living neighbor count of " + livingNeighborCount);
+                        tilemap.SetTile(new Vector3Int(x, y, 0), aliveTile);
+                    }
+                    else
+                    {
+                        tilemap.SetTile(new Vector3Int(x, y, 0), deadTile);
                     }
                 }
             }
+
+            // Wait a set amount of seconds before running this coroutine again.
             yield return new WaitForSeconds(simulationSpeed);
         }
     }
@@ -151,12 +180,13 @@ public class GameOfLife : MonoBehaviour
     /// <summary>
     /// Updates a cell's state in the grid.
     /// </summary>
+    /// <param name="grid">The current state of the grid.</param>
     /// <param name="cell">The cell to update.</param>
     /// <returns>The updated state of the cell.</returns>
-    private Cell UpdateCellState(Cell cell)
+    private Cell UpdateCellState(Cell[,] grid, Cell cell)
     {
-        Cell newCellState = cell;
-        int livingCellCount = cell.LivingNeighborCount(gridState);
+        Cell newCellState = new Cell(cell.X, cell.Y, false);
+        int livingCellCount = cell.LivingNeighborCount(grid);
 
         if (cell.Alive)
         {
