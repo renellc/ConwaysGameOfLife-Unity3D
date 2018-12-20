@@ -684,7 +684,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   minimumZoomLevel: 4
-  maximumZoomLevel: 15
+  maximumZoomLevel: 14
   panSpeed: 5
   board: {fileID: 2061889779}
 --- !u!20 &519420031
