@@ -111,7 +111,7 @@ public class GameOfLife : MonoBehaviour
     }
 
     /// <summary>
-    /// Starts the game of life simulation.
+    /// Starts the game of life simulation. This is called when the 'Start' button is pressed.
     /// </summary>
     public void StartGameOfLifeSimulation()
     {
@@ -124,12 +124,32 @@ public class GameOfLife : MonoBehaviour
     }
 
     /// <summary>
-    /// Stops the Game of Life simulation.
+    /// Stops the Game of Life simulation. This is called when the 'Stop' button is pressed.
     /// </summary>
     public void StopSimulation()
     {
         isRunning = false;
         mouseControl.allowedToEdit = true;
+    }
+
+    /// <summary>
+    /// Stops the current running simulation and resets the board. This is called whe nthe 'Reset'
+    /// button is pressed.
+    /// </summary>
+    public void ResetBoard()
+    {
+        isRunning = false;
+        mouseControl.allowedToEdit = true;
+
+        // Set all cells as dead.
+        for (int x = 0; x < gridState.GetLength(0); x++)
+        {
+            for (int y = 0; y < gridState.GetLength(1); y++)
+            {
+                gridState[x, y].Alive = false;
+                tilemap.SetTile(new Vector3Int(x, y, 0), deadTile);
+            }
+        }
     }
 
     /// <summary>
@@ -198,6 +218,9 @@ public class GameOfLife : MonoBehaviour
         return newCellState;
     }
 
+    /// <summary>
+    /// Adjusts the speed at which the simulation runs at.
+    /// </summary>
     public void AdjustSimulationSpeed()
     {
         simulationSpeed = 1 - simSpeedSlider.value;
