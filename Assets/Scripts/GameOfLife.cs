@@ -27,14 +27,12 @@ public class GameOfLife : MonoBehaviour
     /// <summary>
     /// The width of the board.
     /// </summary>
-    [SerializeField]
-    private int width = 48;
+    public int width = 48;
 
     /// <summary>
     /// The height of the board.
     /// </summary>
-    [SerializeField]
-    private int height = 27;
+    public int height = 27;
 
     /// <summary>
     /// The default speed at which the simulation will run at.

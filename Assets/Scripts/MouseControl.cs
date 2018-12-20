@@ -13,7 +13,7 @@ public class MouseControl : MonoBehaviour
     /// <summary>
     /// The reference to the GameOfLife component.
     /// </summary>
-    private GameOfLife game;
+    private GameOfLife board;
 
     /// <summary>
     /// Is the user allowed to edit the board? 
@@ -23,34 +23,50 @@ public class MouseControl : MonoBehaviour
 
     private void Start()
     {
-        game = GetComponent<GameOfLife>();
+        board = GetComponent<GameOfLife>();
         allowedToEdit = true;
     }
 
     private void Update()
     {
-        if (!allowedToEdit)
-        {
-            return;
-        }
-
         var mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
         var cell = tilemap.WorldToCell(mousePos);
 
-        // Sets a tile as alive on the board.
-        if (!game.isRunning && Input.GetMouseButton(0) && !game.gridState[cell.x, cell.y].Alive)
+        // Don't do any action if the user happens to press on a tile that doesn't exist or if the
+        // the game is currently running.
+        if (!allowedToEdit || !IsValidCoordinate(board.gridState, cell.x, cell.y))
         {
-            game.gridState[cell.x, cell.y].Alive = true;
-            tilemap.SetTile(cell, game.aliveTile);
+            return;
+        }
+
+        // Sets a tile as alive on the board.
+        if (!board.isRunning && Input.GetMouseButton(0) && !board.gridState[cell.x, cell.y].Alive)
+        {
+            board.gridState[cell.x, cell.y].Alive = true;
+            tilemap.SetTile(cell, board.aliveTile);
         }
 
         // Sets a tile as dead on the board.
-        if (!game.isRunning && Input.GetMouseButton(1) && game.gridState[cell.x, cell.y].Alive)
+        if (!board.isRunning && Input.GetMouseButton(1) && board.gridState[cell.x, cell.y].Alive)
         {
-            game.gridState[cell.x, cell.y].Alive = false;
-            tilemap.SetTile(cell, game.deadTile);
+            board.gridState[cell.x, cell.y].Alive = false;
+            tilemap.SetTile(cell, board.deadTile);
         }
+    }
+
+    /// <summary>
+    /// Checks if a given (x, y) coordinate is a valid grid coordinate or not.
+    /// </summary>
+    /// <param name="grid">The current state of the grid.</param>
+    /// <param name="x">The x coordinate to check.</param>
+    /// <param name="y">The y coordinate to check.</param>
+    /// <returns>True if the (x, y) coordinate is valid in the grid or not.</returns>
+    private bool IsValidCoordinate(Cell[,] grid, int x, int y)
+    {
+        int gridWidth = grid.GetLength(0);
+        int gridHeight = grid.GetLength(1);
+        return x >= 0 && x < gridWidth && y >= 0 && y < gridHeight;
     }
 
     public void OnUIMouseHoverEnter()
